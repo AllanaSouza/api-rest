@@ -1,0 +1,98 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API de Treinamento de Testes",
+    "version": "1.0.0",
+    "description": "API Rest para estudo de testes e automação a nível de API."
+  },
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "summary": "Registrar novo usuário",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": { "type": "string" },
+                  "password": { "type": "string" }
+                },
+                "required": ["username", "password"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Usuário criado" },
+          "400": { "description": "Usuário já existe ou dados inválidos" }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "summary": "Login de usuário",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": { "type": "string" },
+                  "password": { "type": "string" }
+                },
+                "required": ["username", "password"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Login bem-sucedido" },
+          "400": { "description": "Campos obrigatórios ausentes" },
+          "401": { "description": "Credenciais inválidas" }
+        }
+      }
+    },
+    "/users": {
+      "get": {
+        "summary": "Listar usuários",
+        "responses": {
+          "200": { "description": "Lista de usuários" }
+        }
+      }
+    },
+    "/transfers": {
+      "get": {
+        "summary": "Listar transferências",
+        "responses": {
+          "200": { "description": "Lista de transferências" }
+        }
+      },
+      "post": {
+        "summary": "Criar transferência",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "remetenteId": { "type": "integer" },
+                  "destinatarioId": { "type": "integer" },
+                  "valor": { "type": "number" }
+                },
+                "required": ["remetenteId", "destinatarioId", "valor"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Transferência criada" },
+          "400": { "description": "Regra de negócio violada ou dados inválidos" }
+        }
+      }
+    }
+  }
+}
