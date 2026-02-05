@@ -1,18 +1,6 @@
-// model/transferModel.js
+// In-memory transfer database
+const transfers = [];
 
-//  Banco  em  memória
-let  transfers  =  [];
-
-function  getTransfers()  {
-    return  transfers;
-}
-
-function  saveTransfer(transfer) {
-    transfers.push(transfer);
-}
-
-module.exports  =  {
-    transfers,
-    getTransfers,
-    saveTransfer
+module.exports = {
+  transfers
 };

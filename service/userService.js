@@ -1,42 +1,29 @@
-//  service/userService.js
-const  {  users,  saveUser  }  =  require('../model/userModel');
+const { users } = require('../model/userModel');
+const bcrypt = require('bcryptjs');
 
-function  getAllUsers()  {
-    return users;
+function findUserByUsername(username) {
+  return users.find(u => u.username === username);
 }
 
-function  findUserByUsername(username)  {
-    return  users.find(u  =>  u.username  ===  username);
+function registerUser({ username, password, favorecidos = [] }) {
+  if (findUserByUsername(username)) {
+    throw new Error('Usuário já existe');
+  }
+  const hashedPassword = bcrypt.hashSync(password, 8);
+  const user = { username, password: hashedPassword, favorecidos, saldo: 10000 };
+  users.push(user);
+  return { username, favorecidos, saldo: user.saldo };
 }
 
-function  findUserById(id)  {
-    return users.find(u  =>  u.id  ===  id);
+function loginUser({ username, password }) {
+  const user = findUserByUsername(username);
+  if (!user) throw new Error('Usuário não encontrado');
+  if (!bcrypt.compareSync(password, user.password)) throw new Error('Senha inválida');
+  return { username: user.username, favorecidos: user.favorecidos, saldo: user.saldo };
 }
 
-function  createUser({  username,  password  })  {
-    const  existing  =  findUserByUsername(username);
-
-   if  (existing)  {
-        const  error  =  new  Error('Usuário  já  existe');
-        error.status  =  400;
-       throw  error;
-    }
-
-    const  newUser  =  {
-        id:  users.length  ? users[users.length  -  1].id  +  1  :  1,
-        username,
-        password,
-        favorecidos: [],
-        saldo:  0
-    };
-
-    saveUser(newUser);
-    return  newUser;
+function listUsers() {
+  return users.map(u => ({ username: u.username, favorecidos: u.favorecidos, saldo: u.saldo }));
 }
 
-module.exports  = {
-    getAllUsers,
-    findUserByUsername,
-    findUserById,
-    createUser
-};
+module.exports = { registerUser, loginUser, listUsers, findUserByUsername };

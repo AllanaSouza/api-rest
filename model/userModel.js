@@ -1,33 +1,21 @@
-//  model/userModel.js
+const bcrypt = require('bcryptjs');
 
-//  Banco  em  memória
-let  users  =  [
-    {
-       id:  1,
-        username:  'admin',
-        password:  'admin123',
-        favorecidos: [2],
-        saldo:  100000
-    },
-    {
-        id:  2,
-       username:  'cliente',
-        password:  'cliente123',
-        favorecidos:  [],
-        saldo:  5000
-   }
+// In-memory user database
+const users = [
+  {
+    username: 'julio', 
+    password: bcrypt.hashSync('123456', 8), 
+    favorecidos: [ 'priscila' ], 
+    saldo: 10000
+  },
+  {
+    username: 'priscila', 
+    password: bcrypt.hashSync('123456', 8), 
+    favorecidos: [ 'julio' ], 
+    saldo: 10000
+  }
 ];
 
-function  getUsers()  {
-    return  users;
-}
-
-function  saveUser(user)  {
-    users.push(user);
-}
-
-module.exports =  {
-    users,
-    getUsers,
-    saveUser
+module.exports = {
+  users
 };

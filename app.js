@@ -1,21 +1,14 @@
-const  express  =  require('express');
-const  swaggerUi  =  require('swagger-ui-express');
-const  swaggerDocument  =  require('./swagger.json');
+const express = require('express');
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./swagger.json');
+const userController = require('./controller/userController');
+const transferController = require('./controller/transferController');
 
-const  userRoutes  =  require('./controller/userController');
-const  authRoutes  =  require('./controller/authController');
-const  transferRoutes  =  require('./controller/transferController');
-
-const  app  =  express();
+const app = express();
 app.use(express.json());
 
-//  Swagger
-app.use('/api-docs',  swaggerUi.serve,  swaggerUi.setup(swaggerDocument));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use('/users', userController);
+app.use('/transfers', transferController);
 
-//  Rotas
-app.use('/auth',  authRoutes);
-app.use('/users',  userRoutes);
-app.use('/transfers',  transferRoutes);
-
-module.exports  =  app;
-
+module.exports = app;

@@ -1,31 +1,24 @@
-const express  =  require('express');
-const  router  =  express.Router();
-const  {  transfer,  getTransfers  }  =  require('../service/transferService');
 
-router.get('/',  (req,  res)  =>  {
-    try  {
-        const  list  =  getTransfers();
-        return  res.status(200).json(list);
-   }  catch  (err)  {
-        return  res.status(500).json({  message:  'Erro  ao  listar  transferências'  });
-    }
+const express = require('express');
+const router = express.Router();
+const transferService = require('../service/transferService');
+const authenticateToken = require('../middleware/authenticateToken');
+
+router.post('/', authenticateToken, (req, res) => {
+  const { from, to, value } = req.body;
+  if (!from || !to || typeof value !== 'number') return res.status(400).json({ error: 'Campos obrigatórios: from, to, value' });
+  try {
+    const transfer = transferService.transfer({ from, to, value });
+    res.status(201).json(transfer);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
 });
 
-router.post('/',  (req,  res)  =>  {
-    try  {
-        const  { remetenteId,  destinatarioId,  valor  }  =  req.body;
 
-        const  transferencia  =  transfer({
-            remetenteId,
-            destinatarioId,
-            valor
-       });
-
-        return  res.status(201).json(transferencia);
-    }  catch  (err)  {
-        return  res.status(err.status  ||  500).json({  message:  err.message  });
-    }
+router.get('/', authenticateToken, (req, res) => {
+  res.json(transferService.listTransfers());
 });
 
-module.exports  =  router;
+module.exports = router;
 
